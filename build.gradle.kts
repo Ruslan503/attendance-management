@@ -24,6 +24,10 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	implementation ("org.projectlombok:lombok:1.18.34")
+	annotationProcessor ("org.projectlombok:lombok:1.18.34")
+	testImplementation ("org.projectlombok:lombok:1.18.34")
+	testAnnotationProcessor ("org.projectlombok:lombok:1.18.34")
 }
 
 tasks.withType<Test> {

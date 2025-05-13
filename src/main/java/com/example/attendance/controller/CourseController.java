@@ -5,6 +5,7 @@ import com.example.attendance.model.User;
 import com.example.attendance.repository.CourseRepository;
 import com.example.attendance.repository.UserRepository;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +16,9 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/courses")
+@Slf4j
 public class CourseController {
 
-    private static final Logger LOGGER = Logger.getLogger(CourseController.class.getName());
 
     @Autowired
     private CourseRepository courseRepository;
@@ -27,13 +28,13 @@ public class CourseController {
 
     @GetMapping
     public List<Course> getAllCourses() {
-        LOGGER.info("Received GET request for all courses");
+        log.info("Received GET request for all courses");
         return courseRepository.findAll();
     }
 
     @PostMapping
     public ResponseEntity<Course> createCourse(@Valid @RequestBody Course course) {
-        LOGGER.info("Received POST request to create course: " + course.getName());
+        log.info("Received POST request to create course: " + course.getName());
         if (course.getFaculty() != null && course.getFaculty().getId() != null) {
             Optional<User> faculty = userRepository.findById(course.getFaculty().getId());
             if (faculty.isPresent() && faculty.get().getRole() == User.Role.FACULTY) {
@@ -54,7 +55,7 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> getCourseById(@PathVariable Long id) {
-        LOGGER.info("Received GET request for course with ID: " + id);
+        log.info("Received GET request for course with ID: " + id);
         Optional<Course> course = courseRepository.findById(id);
         return course.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -62,7 +63,7 @@ public class CourseController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id, @Valid @RequestBody Course courseDetails) {
-        LOGGER.info("Received PUT request to update course with ID: " + id);
+        log.info("Received PUT request to update course with ID: " + id);
         Optional<Course> courseOptional = courseRepository.findById(id);
         if (courseOptional.isPresent()) {
             Course course = courseOptional.get();
@@ -89,7 +90,7 @@ public class CourseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
-        LOGGER.info("Received DELETE request for course with ID: " + id);
+        log.info("Received DELETE request for course with ID: " + id);
         if (courseRepository.existsById(id)) {
             courseRepository.deleteById(id);
             return ResponseEntity.ok().build();
